@@ -18,6 +18,8 @@
 
   <property name="antlr.lib" location="lib/antlrworks-1.3.1.jar"/>
   <property name="junit.lib" location="lib/junit-4.9b2.jar"/>
+  <property name="vfs.lib" location="lib/jboss-vfs.jar"/>
+  <property name="logging.lib" location="lib/jboss-logging.jar"/>
 
   <!-- Jarfiles everything ends up in -->
   <property name="compiler.jar" location="${build.lib}/compiler.jar"/>
@@ -31,6 +33,8 @@
   <path id="compiler.classpath">
     <pathelement path="${typechecker.jar}"/>
     <pathelement path="${antlr.lib}"/>
+    <pathelement path="${vfs.lib}"/>
+    <pathelement path="${logging.lib}"/>
   </path>
 
   <path id="test.compile.classpath">

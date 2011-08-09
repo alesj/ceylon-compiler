@@ -5,10 +5,10 @@ import javax.tools.JavaFileObject;
 import com.redhat.ceylon.compiler.typechecker.analyzer.ModuleBuilder;
 import com.redhat.ceylon.compiler.typechecker.context.Context;
 import com.redhat.ceylon.compiler.typechecker.context.PhasedUnit;
-import com.redhat.ceylon.compiler.typechecker.io.VirtualFile;
 import com.redhat.ceylon.compiler.typechecker.model.Package;
 import com.redhat.ceylon.compiler.typechecker.tree.Tree.CompilationUnit;
 import com.sun.tools.javac.util.Position.LineMap;
+import org.jboss.vfs.VirtualFile;
 
 public class CeylonPhasedUnit extends PhasedUnit {
 

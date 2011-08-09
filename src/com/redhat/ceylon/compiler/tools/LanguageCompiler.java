@@ -42,8 +42,6 @@ import com.redhat.ceylon.compiler.loader.CeylonModelLoader;
 import com.redhat.ceylon.compiler.typechecker.analyzer.ModuleBuilder;
 import com.redhat.ceylon.compiler.typechecker.context.PhasedUnit;
 import com.redhat.ceylon.compiler.typechecker.context.PhasedUnits;
-import com.redhat.ceylon.compiler.typechecker.io.VFS;
-import com.redhat.ceylon.compiler.typechecker.io.VirtualFile;
 import com.redhat.ceylon.compiler.typechecker.parser.CeylonLexer;
 import com.redhat.ceylon.compiler.typechecker.parser.CeylonParser;
 import com.redhat.ceylon.compiler.typechecker.parser.LexError;
@@ -67,6 +65,8 @@ import com.sun.tools.javac.util.Options;
 import com.sun.tools.javac.util.Pair;
 import com.sun.tools.javac.util.Position;
 import com.sun.tools.javac.util.Position.LineMap;
+import org.jboss.vfs.VFS;
+import org.jboss.vfs.VirtualFile;
 
 public class LanguageCompiler extends JavaCompiler {
 
@@ -79,7 +79,6 @@ public class LanguageCompiler extends JavaCompiler {
     private final CeylonTransformer gen;
     private final PhasedUnits phasedUnits;
     private final com.redhat.ceylon.compiler.typechecker.context.Context ceylonContext;
-    private final VFS vfs;
 
 	private CeylonModelLoader modelLoader;
 
@@ -99,7 +98,7 @@ public class LanguageCompiler extends JavaCompiler {
     public static com.redhat.ceylon.compiler.typechecker.context.Context getCeylonContextInstance(Context context) {
         com.redhat.ceylon.compiler.typechecker.context.Context ceylonContext = context.get(ceylonContextKey);
         if (ceylonContext == null) {
-            ceylonContext = new com.redhat.ceylon.compiler.typechecker.context.Context(new VFS());
+            ceylonContext = new com.redhat.ceylon.compiler.typechecker.context.Context();
             context.put(ceylonContextKey, ceylonContext);
         }
         return ceylonContext;
@@ -120,7 +119,6 @@ public class LanguageCompiler extends JavaCompiler {
     public LanguageCompiler(Context context) {
         super(context);
         ceylonContext = getCeylonContextInstance(context);
-        vfs = ceylonContext.getVfs();
         phasedUnits = getPhasedUnitsInstance(context);
         try {
             gen = CeylonTransformer.getInstance(context);
@@ -200,8 +198,8 @@ public class LanguageCompiler extends JavaCompiler {
                 ModuleBuilder moduleBuilder = phasedUnits.getModuleBuilder();
                 File sourceFile = new File(filename.toString());
                 // FIXME: temporary solution
-                VirtualFile file = vfs.getFromFile(sourceFile);
-                VirtualFile srcDir = vfs.getFromFile(getSrcDir(sourceFile));
+                VirtualFile file = VFS.getChild(sourceFile.toURI());
+                VirtualFile srcDir = VFS.getChild(getSrcDir(sourceFile).toURI());
                 // FIXME: this is bad in many ways
                 String pkgName = getPackage(filename);
                 // make a Package with no module yet, we will resolve them later
